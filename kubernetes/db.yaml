@@ -4,12 +4,12 @@ kind: MongoDBCommunity
 metadata:
   name: db
 spec:
-  members: 3
+  members: 1
   type: ReplicaSet
   version: "6.0.5"
   security:
     authentication:
-      modes: ["SCRAM"]
+      modes: [ "SCRAM" ]
   users:
     - name: db-admin
       db: admin
@@ -23,3 +23,18 @@ spec:
       scramCredentialsSecretName: my-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mongod
+              resources:
+                requests:
+                  cpu: "250m"
+                  memory: 0.5Gi
+            - name: mongodb-agent
+              resources:
+                requests:
+                  cpu: "250m"
+                  memory: 0.5Gi

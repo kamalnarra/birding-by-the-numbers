@@ -21,7 +21,7 @@ metadata:
     app: web
   name: web
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: web
@@ -31,8 +31,12 @@ spec:
         app: web
     spec:
       containers:
-        - image: us-east1-docker.pkg.dev/birding-by-the-numbers/web/web:test6
+        - image: us-east1-docker.pkg.dev/birding-by-the-numbers/web/web:test7
           name: web
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 0.5Gi
           env:
             - name: GOOGLE_CLIENT_ID
               valueFrom:

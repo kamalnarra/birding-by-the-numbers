@@ -5,7 +5,7 @@ metadata:
     app: ebird
   name: ebird
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ebird
@@ -17,6 +17,10 @@ spec:
       containers:
         - image: us-east1-docker.pkg.dev/birding-by-the-numbers/ebird/ebird:test7
           name: ebird
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 0.5Gi
           env:
             - name: DB_URI
               valueFrom:
