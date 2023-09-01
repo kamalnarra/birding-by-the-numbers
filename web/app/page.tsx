@@ -2,8 +2,7 @@ import GlobalMap from "./_components/GlobalMap";
 import NextLink from "next/link";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { client, users } from "@/app/_lib/db";
-import { addUser } from "./_lib/mq";
+import { users } from "@/app/_lib/db";
 import { Sheet, Stack, Typography, Box } from "@mui/joy";
 
 export default async function HomePage() {
@@ -11,17 +10,11 @@ export default async function HomePage() {
   const user = await (await users).findOne({ email: session!.user!.email! });
   if (!user) {
     await (
-      await client
-    ).withSession(async (s) => {
-      await s.withTransaction(async () => {
-        const newUser = await (
-          await users
-        ).insertOne({
-          email: session!.user!.email!,
-          name: session!.user!.name!,
-        });
-        await addUser(newUser.insertedId.toHexString());
-      });
+      await users
+    ).insertOne({
+      email: session!.user!.email!,
+      name: session!.user!.name!,
+      lastUpdated: 0,
     });
   }
 

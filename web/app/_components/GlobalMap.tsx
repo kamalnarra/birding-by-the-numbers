@@ -1,19 +1,39 @@
 "use client";
 
-import { GeoJSONSource, Layer, Map, MapRef, Source } from "react-map-gl";
-import { useRef } from "react";
+import { GeoJSONSource, Layer, Map, MapRef, Popup, Source } from "react-map-gl";
+import { useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { WithId } from "mongodb";
 import { User } from "@/app/_lib/db";
 import { Point } from "geojson";
-import { useRouter } from "next/navigation";
 
 export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
-  const router = useRouter();
   const mapRef = useRef<MapRef>(null);
+  const [point, setPoint] = useState<{
+    profileId: string;
+    birdId: number;
+    birdName: string;
+    lat: number;
+    lon: number;
+  } | null>(null);
 
   return (
     <Map
+      onMouseMove={(event) => {
+        if (event.features?.[0]?.layer.id === "unclustered-point") {
+          setPoint(
+            event.features[0].properties as {
+              profileId: string;
+              birdId: number;
+              birdName: string;
+              lat: number;
+              lon: number;
+            },
+          );
+        } else {
+          setPoint(null);
+        }
+      }}
       mapboxAccessToken="pk.eyJ1IjoiYm9iYnlnZW9yZ2UiLCJhIjoiY2xjdGN6cHp1MDljaDNvcnpsMmFmamxqbiJ9.EtiTP4EIKmgijooUldvG2w"
       mapStyle="mapbox://styles/mapbox/streets-v9"
       style={{
@@ -51,12 +71,6 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
               duration: 500,
             });
           });
-        } else if (feature?.layer?.id === "unclustered-point") {
-          router.push(
-            `/profiles/${feature.properties!.profileId}/birds/${
-              feature.properties!.birdId
-            }`,
-          );
         }
       }}
       ref={mapRef}
@@ -68,11 +82,22 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
           type: "FeatureCollection",
           features: profiles.flatMap(
             (profile) =>
-              profile.birds?.map(({ lon, lat, id }) => ({
-                type: "Feature",
-                properties: { profileId: profile._id, birdId: id },
-                geometry: { type: "Point", coordinates: [lon, lat] },
-              })) ?? [],
+              profile.birds?.map(
+                ({ longitude, latitude, common_name }, index) => ({
+                  type: "Feature",
+                  properties: {
+                    profileId: profile._id,
+                    birdId: index,
+                    birdName: common_name,
+                    lat: parseFloat(latitude),
+                    lon: parseFloat(longitude),
+                  },
+                  geometry: {
+                    type: "Point",
+                    coordinates: [parseFloat(longitude), parseFloat(latitude)],
+                  },
+                }),
+              ) ?? [],
           ),
         }}
         cluster={true}
@@ -127,6 +152,11 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
             "circle-stroke-color": "#fff",
           }}
         />
+        {point && (
+          <Popup longitude={point.lon} latitude={point.lat}>
+            {point.birdName}
+          </Popup>
+        )}
       </Source>
     </Map>
   );

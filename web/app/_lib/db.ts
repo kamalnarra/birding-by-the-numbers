@@ -8,13 +8,20 @@ export interface User {
   ebirdUsername?: string;
   ebirdPassword?: string;
   birds?: {
-    id: string;
-    name: string;
-    lat: number;
-    lon: number;
-    locationName: string;
+    taxon_order: string;
+    category: string;
+    common_name: string;
+    scientific_name: string;
+    location: string;
+    "s/p": string;
+    date: string;
+    locid: string;
+    subid: string;
+    countable: string;
+    latitude: string;
+    longitude: string;
   }[];
-  updated?: string;
+  lastUpdated: number;
 }
 
 export const users = client.then((client) =>

@@ -34,18 +34,12 @@ export default async function BirdPage({
             <GlobalMap profiles={[user]} />
           </Box>
           <Stack spacing={3} sx={{ width: "200px" }}>
-            {user.birds?.map((bird) => (
-              <Sheet
-                component={NextLink}
-                href={`/profiles/${params.profileId}/birds/${bird.id}`}
-                key={bird.id}
-                variant="soft"
-                sx={{ p: 2, textDecoration: "none" }}
-              >
+            {user.birds?.map((bird, index) => (
+              <Sheet key={index} variant="soft" sx={{ p: 2 }}>
                 <Typography level="title-lg" sx={{ mb: 2 }}>
-                  {bird.name}
+                  {bird.common_name}
                 </Typography>
-                <Typography>Seen In: {bird.locationName}</Typography>
+                <Typography>Seen In: {bird.location}</Typography>
               </Sheet>
             ))}
           </Stack>
