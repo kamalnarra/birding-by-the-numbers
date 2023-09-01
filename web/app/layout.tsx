@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.variable}>
         <Joy>
-          <Stack sx={{ minHeight: "100vh" }}>
+          <Stack sx={{ height: "100vh" }}>
             <Navbar />
             {children}
           </Stack>

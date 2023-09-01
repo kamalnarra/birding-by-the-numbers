@@ -23,13 +23,13 @@ export default async function HomePage() {
   return (
     <Stack sx={{ flex: 1, px: 3, py: 2 }} spacing={3}>
       <Stack sx={{ flex: 1 }}>
-        <Typography level="h3" sx={{ mb: 2 }}>
+        <Typography level="h2" sx={{ mb: 2 }}>
           All Sightings
         </Typography>
         <GlobalMap profiles={profiles} />
       </Stack>
       <Box>
-        <Typography level="h3" sx={{ mb: 2 }}>
+        <Typography level="h2" sx={{ mb: 2 }}>
           Featured Profiles
         </Typography>
         <Stack direction="row" spacing={3}>

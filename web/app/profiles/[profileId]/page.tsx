@@ -17,28 +17,26 @@ export default async function BirdPage({
 
   return (
     <>
-      <Breadcrumbs sx={{ px: 3, py: 2 }}>
-        <Link component={NextLink} href="/">
-          Home
-        </Link>
-        <Typography>{user.name}</Typography>
-      </Breadcrumbs>
-      <Stack sx={{ px: 3, py: 2, flex: 1 }} spacing={3}>
-        <Typography level="h3">{user.name}&apos;s Birds</Typography>
-        <Stack
-          sx={{ flex: 1, alignItems: "stretch" }}
-          spacing={3}
-          direction="row"
-        >
-          <Box sx={{ flex: 1 }}>
+      <Stack sx={{ px: 3, py: 2, flex: 1, overflow: "hidden" }}>
+        <Typography level="h1">{user.name}&apos;s Birds</Typography>
+        <Breadcrumbs sx={{ mb: 3 }}>
+          <Link component={NextLink} href="/">
+            Home
+          </Link>
+          <Typography>{user.name}</Typography>
+        </Breadcrumbs>
+        <Stack sx={{ flex: 1, overflow: "hidden" }} spacing={3} direction="row">
+          <Box sx={{ flex: 1, height: "100%" }}>
             <GlobalMap profiles={[user]} />
           </Box>
-          <Stack spacing={3} sx={{ width: "200px" }}>
+          <Stack
+            spacing={3}
+            sx={{ width: "500px", overflow: "auto", height: "100%" }}
+          >
             {user.birds?.map((bird, index) => (
               <Sheet key={index} variant="soft" sx={{ p: 2 }}>
-                <Typography level="title-lg" sx={{ mb: 2 }}>
-                  {bird.common_name}
-                </Typography>
+                <Typography level="title-lg">{bird.common_name}</Typography>
+                <Typography sx={{ mb: 2 }}>{bird.date}</Typography>
                 <Typography>Seen In: {bird.location}</Typography>
               </Sheet>
             ))}

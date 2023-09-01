@@ -13,7 +13,7 @@ export default function SettingsPage({
           Success
         </Alert>
       )}
-      <Typography level="h2" sx={{ mb: 2 }}>
+      <Typography level="h1" sx={{ mb: 2 }}>
         Settings
       </Typography>
       <EbirdForm />

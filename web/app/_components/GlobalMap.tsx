@@ -6,6 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { WithId } from "mongodb";
 import { User } from "@/app/_lib/db";
 import { Point } from "geojson";
+import { Typography } from "@mui/joy";
 
 export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
   const mapRef = useRef<MapRef>(null);
@@ -15,6 +16,8 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
     birdName: string;
     lat: number;
     lon: number;
+    location: string;
+    date: string;
   } | null>(null);
 
   return (
@@ -28,6 +31,8 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
               birdName: string;
               lat: number;
               lon: number;
+              location: string;
+              date: string;
             },
           );
         } else {
@@ -83,7 +88,10 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
           features: profiles.flatMap(
             (profile) =>
               profile.birds?.map(
-                ({ longitude, latitude, common_name }, index) => ({
+                (
+                  { longitude, latitude, common_name, location, date },
+                  index,
+                ) => ({
                   type: "Feature",
                   properties: {
                     profileId: profile._id,
@@ -91,6 +99,8 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
                     birdName: common_name,
                     lat: parseFloat(latitude),
                     lon: parseFloat(longitude),
+                    location: location,
+                    date,
                   },
                   geometry: {
                     type: "Point",
@@ -154,7 +164,9 @@ export default function GlobalMap({ profiles }: { profiles: WithId<User>[] }) {
         />
         {point && (
           <Popup longitude={point.lon} latitude={point.lat}>
-            {point.birdName}
+            <Typography level="title-lg">{point.birdName}</Typography>
+            <Typography sx={{ mb: 2 }}>{point.date}</Typography>
+            <Typography>Seen In: {point.location}</Typography>
           </Popup>
         )}
       </Source>
